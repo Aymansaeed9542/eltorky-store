@@ -10,6 +10,18 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Prevent body scroll when menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -24,19 +36,26 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="w-full bg-white border-b border-white fixed top-0 z-50 transition-all duration-300">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`flex items-center justify-between transition-all duration-300 ${isScrolled ? 'h-20' : 'h-28'}`}>
-          {/* Mobile Menu Toggle - Only visible on small screens */}
-          <div className="md:hidden flex-1">
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-gray-700 hover:text-black transition-colors"
-              aria-label="Toggle Menu"
-            >
-              {isMobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-            </button>
-          </div>
+    <>
+      <header className="w-full bg-white border-b border-white fixed top-0 z-50 transition-all duration-300">
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className={`flex items-center justify-between transition-all duration-300 ${isScrolled ? 'h-20' : 'h-28'}`}>
+            {/* Mobile Menu Toggle and Cart - Only visible on small screens */}
+            <div className="md:hidden flex-1 flex items-center gap-4">
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="text-gray-700 hover:text-black transition-colors"
+                aria-label="Toggle Menu"
+              >
+                {isMobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+              </button>
+              <button
+                className="text-gray-700 hover:text-black transition-colors"
+                aria-label="Shopping Cart"
+              >
+                <FiShoppingBag size={24} />
+              </button>
+            </div>
 
           {/* Left Section - Icons (Hidden on mobile, visible on desktop) */}
           <div className="hidden md:flex flex-1 items-center gap-4 sm:gap-6">
@@ -112,78 +131,77 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Placeholder for mobile to balance layout */}
-          <div className="md:hidden flex-1"></div>
-        </div>
+            {/* Placeholder for mobile to balance layout */}
+            <div className="md:hidden flex-1"></div>
+          </div>
+        </nav>
+      </header>
 
-        {/* Mobile Menu - Slides down when open */}
-        <div
-          className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
-            isMobileMenuOpen ? 'max-h-96 opacity-100 translate-y-0' : 'max-h-0 opacity-0 -translate-y-4'
-          }`}
+      {/* Full Screen Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/80 z-50 md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
         >
-          <div className="py-4 space-y-4 border-t border-gray-200">
-            <Link
-              href="/"
-              className="block text-gray-700 hover:text-black font-medium transition-colors text-base font-tajawal py-2"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              الصفحة الرئيسية
-            </Link>
-            <Link
-              href="/clothes"
-              className="block text-gray-700 hover:text-black font-medium transition-colors text-base font-tajawal py-2"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              الملابس
-            </Link>
-            <Link
-              href="/shoes"
-              className="block text-gray-700 hover:text-black font-medium transition-colors text-base font-tajawal py-2"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              شوز
-            </Link>
-            <Link
-              href="/accessories"
-              className="block text-gray-700 hover:text-black font-medium transition-colors text-base font-tajawal py-2"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              الاكسسوارات
-            </Link>
-            <Link
-              href="/contact"
-              className="block text-gray-700 hover:text-black font-medium transition-colors text-base font-tajawal py-2"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              اتصل بنا
-            </Link>
-            
-            {/* Mobile Icons */}
-            <div className="flex items-center gap-4 pt-4 border-t border-gray-200">
-              <button 
-                className="text-gray-700 hover:text-black transition-colors"
-                aria-label="Shopping Bag"
+          <div 
+            className="w-full h-full bg-gray-900/95 flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Top Bar with Close Button and Logo */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-white hover:text-gray-300 transition-colors"
+                aria-label="Close Menu"
               >
-                <FiShoppingBag size={24} />
+                <FiX size={24} />
               </button>
-              <button 
-                className="text-gray-700 hover:text-black transition-colors"
-                aria-label="User Profile"
+              <h2 className="text-white text-xl font-bold font-anton">ELTORKY</h2>
+              <div className="w-6"></div> {/* Spacer for centering */}
+            </div>
+
+            {/* Navigation Menu Items */}
+            <div className="flex-1 flex flex-col items-center justify-center space-y-8 px-6">
+              <Link
+                href="/"
+                className="text-white text-2xl font-bold font-tajawal hover:text-gray-300 transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
               >
-                <FiUser size={24} />
-              </button>
-              <button 
-                className="text-gray-700 hover:text-black transition-colors"
-                aria-label="Search"
+                الصفحة الرئيسية
+              </Link>
+              <Link
+                href="/clothes"
+                className="text-white text-2xl font-bold font-tajawal hover:text-gray-300 transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
               >
-                <FiSearch size={24} />
-              </button>
+                الملابس
+              </Link>
+              <Link
+                href="/shoes"
+                className="text-white text-2xl font-bold font-tajawal hover:text-gray-300 transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                شوز
+              </Link>
+              <Link
+                href="/accessories"
+                className="text-white text-2xl font-bold font-tajawal hover:text-gray-300 transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                الاكسسوارات
+              </Link>
+              <Link
+                href="/contact"
+                className="text-white text-2xl font-bold font-tajawal hover:text-gray-300 transition-colors"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                اتصل بنا
+              </Link>
             </div>
           </div>
         </div>
-      </nav>
-    </header>
+      )}
+    </>
   );
 }
 

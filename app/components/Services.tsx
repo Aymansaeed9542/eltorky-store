@@ -36,7 +36,7 @@ export default function Services() {
   return (
     <section 
       ref={sectionRef}
-      className="w-full bg-black py-12 px-4 sm:px-6 lg:px-8 mt-25"
+      className="w-full bg-black py-12 px-4 sm:px-6 lg:px-8 mt-15"
     >
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
